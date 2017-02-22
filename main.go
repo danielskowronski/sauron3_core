@@ -3,7 +3,35 @@ package main
 import (
     "fmt"
     "net/http"
+    "io/ioutil"
+    "encoding/json"
+
+    "gopkg.in/yaml.v2"
 )
+
+type Probe struct {
+    Title string    `yaml:"title"`
+    Proto string    `yaml:"proto"`
+    Port int32      `yaml:"port"`
+    Alive bool      `yaml:"alive"`
+}
+type Host struct {
+    Title string    `yaml:"title"`
+    IP string       `yaml:"ip"`
+    Probes []*Probe `yaml:"probes"`
+}
+var Database []*Host
+var DatabaseJson string
+
+func loadConfig(){
+    data, err := ioutil.ReadFile("config.yml") 
+    if err != nil { panic(fmt.Sprintf("%v",err)) }
+    err = yaml.Unmarshal(data, &Database)
+    if err != nil { panic(fmt.Sprintf("%v",err)) }
+    jsonObj, err := json.Marshal(Database)
+    if err != nil { panic(fmt.Sprintf("%v",err)) }
+    DatabaseJson = string(jsonObj)
+}
 
 func staticHandler(w http.ResponseWriter, r *http.Request) {
     if r.URL.Path=="/" {
@@ -17,24 +45,20 @@ func staticHandler(w http.ResponseWriter, r *http.Request) {
         fmt.Fprintf(w, "Requested URL was not handled by this application.\n%s", r.URL.Path)
     } 
 }
-func getHostsList(w http.ResponseWriter, r *http.Request) {
-    //mock
-    fmt.Fprintf(w, "[{\"id\":0,\"name\":\"yuggoth\",\"ip\":\"10.64.73.7\"},{\"id\":1,\"name\":\"vm\",\"ip\":\"10.64.73.8\"}]")
+func getDefinitions(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, DatabaseJson)
 }
 func getLivecheck(w http.ResponseWriter, r *http.Request) { 
-    //mock
-    fmt.Fprintf(w, "[{\"host_id\":0,\"check_id\":0,\"name\":\"ping\",\"alive\":true},{\"host_id\":1,\"check_id\":1,\"name\":\"ping\",\"alive\":true},{\"host_id\":1,\"check_id\":2,\"name\":\"tcp/80\",\"alive\":false}]")
-}
-func getLivecheckList(w http.ResponseWriter, r *http.Request) { 
-    getLivecheck(w,r)
+    fmt.Fprintf(w, DatabaseJson) //mock all dead
 }
 
 func main() {
+    loadConfig()
+
     fmt.Println("Welcome to sauron runner!")
 
     http.HandleFunc("/", staticHandler)
-    http.HandleFunc("/hosts/", getHostsList)
-    http.HandleFunc("/livechecks/", getLivecheckList)
+    http.HandleFunc("/definitions/", getDefinitions)
     http.HandleFunc("/probe/", getLivecheck)
     http.ListenAndServe(":8888", nil)
 }

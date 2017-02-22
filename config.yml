@@ -1,0 +1,21 @@
+- title: this app
+  ip: 127.0.0.1
+  probes:
+    - title: ping
+      proto: icmp
+      port: 0
+    - title: http
+      proto: tcp
+      port: 8888
+- title: google
+  ip: 8.8.8.8
+  probes:
+    - title: ping
+      proto: icmp
+      port: 0
+    - title: dns
+      proto: udp
+      port: 53
+    - title: "tcp/8888"
+      proto: tcp
+      port: 8888

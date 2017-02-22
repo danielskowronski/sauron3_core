@@ -1,40 +1,48 @@
 var refreshRate = 5000; //ms
-function constructHostRow(id, name){
-	return 	"<div class='hostRow' data-hostid='"+id+"'>"+
+function constructHostRow(name){
+	return 	"<div class='hostRow' data-host='"+name+"' >"+
 			"<div class='hostTitle'>"+name+"</div>"+
 			"<div class='hostProbes'></div>"+
 			"</div>";
 }
-function constructHostsContainer(data){
-	hosts=jQuery.parseJSON(data)
-	$.each( hosts, function( key, value ) {
-		$("#display").append(constructHostRow(value.id, value.name))
-	});
+
+function constructLivecheckField(host,probe){
+	return 	"<div class='hostCheck dead' data-host='"+host+"' data-probe='"+probe+"'>"+probe+"</div>";
 }
 
-function constructLivecheckField(id, name){
-	return 	"<div class='hostCheck dead' data-checkid='"+id+"'>"+name+"</div>";
-}
-function constructLivechecksContainer(data){
-	hosts=jQuery.parseJSON(data)
-	$.each( hosts, function( key, value ) {
-		$("[data-hostid="+value.host_id+"]").append(constructLivecheckField(value.check_id, value.name))
+function parseDefinitions(data){
+	hosts = jQuery.parseJSON(data)
+	$.each( hosts , function( key, host ) {
+		console.log(host)
+		$("#display").append(constructHostRow(host.Title))
+		$.each( host.Probes, function( key, probe ) {
+			$("[data-host='"+host.Title+"'].hostRow .hostProbes").append(
+				constructLivecheckField(host.Title, probe.Title)
+			);
+
+		});
 	});
 }
 
 function probeLivecheck(){
-	var timeoutHandle = setTimeout(function(){ $("#display").css("background", "orange"); }, refreshRate*3);
+	var timeoutHandle = 
+		setTimeout(function(){ $("#display").css("background", "orange"); }, refreshRate*3);
+
 	$.get( "/probe/", function( data ) {
 		livechecks=jQuery.parseJSON(data);
 		$.each( livechecks, function( key, value ) {
-			obj = $("[data-checkid="+value.check_id+"]")
-			if (value.alive) {
-				$(obj).removeClass("dead")
-				$(obj).addClass("alive")
-			} else {
-				$(obj).removeClass("alive")
-				$(obj).addClass("dead")
-			}
+			hosts = jQuery.parseJSON(data)
+			$.each( hosts , function( key, host ) {
+				$.each( host.Probes, function( key, probe ) {			
+					if (probe.Alive) {
+						$(obj).removeClass("dead")
+						$(obj).addClass("alive")
+					} else {
+						$(obj).removeClass("alive")
+						$(obj).addClass("dead")
+					}
+				});
+			});
 		});
 		clearTimeout(timeoutHandle)
 		$("#display").css("background", "none");
@@ -42,15 +50,10 @@ function probeLivecheck(){
 }
 
 $(function() {
-	$.get( "/hosts/", function( data ) {
-		constructHostsContainer(data)
+	$.get( "/definitions/", function( data ) {
+		parseDefinitions(data)
 
-		$.get( "/livechecks/", function( data ) {
-			constructLivechecksContainer(data)
-
-			probeLivecheck();
-			setInterval(function(){ probeLivecheck(); }, refreshRate);
-		});
+		probeLivecheck();
+		setInterval(function(){ probeLivecheck(); }, refreshRate);
 	});
-
 });

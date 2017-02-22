@@ -5,7 +5,7 @@ third approach to Sauron - a real time eye on your network - this time in Go Lan
 defined in config hosts have ports (tcp/udp/icmp) that are pinged on demand and displayed in webpage - ideal to be put on plasma tv in Networks Operation Command Center or other similar facilites or accessed from mobile phone 
 
 ## dev - dependencies
-
+ - `go get gopkg.in/yaml.v2`
 
 ## dev - compilation
 `go generate && go build -o sauron.o`
