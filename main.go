@@ -33,6 +33,32 @@ func loadConfig(){
     DatabaseJson = string(jsonObj)
 }
 
+func livecheck(ip string, probe Probe) bool{
+    //mock ^.^
+    if probe.Proto=="tcp" {
+        return true
+    } else if probe.Proto=="udp" {
+        return false
+    } else { // assume ICMP PING as everything other for simple fallback
+        return false
+    }
+ 
+}
+
+func checkAll() string{
+    LiveStatus := Database
+
+    for _,host := range LiveStatus {
+        for _,probe := range host.Probes {
+            probe.Alive=livecheck(host.IP, *probe)
+        }
+    }
+
+    jsonObj, err := json.Marshal(LiveStatus)
+    if err != nil { return "{\"error!\"}" }
+    return string(jsonObj)
+}
+
 func staticHandler(w http.ResponseWriter, r *http.Request) {
     if r.URL.Path=="/" {
         fmt.Fprintf(w, "%s", index_html)
@@ -49,7 +75,7 @@ func getDefinitions(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintf(w, DatabaseJson)
 }
 func getLivecheck(w http.ResponseWriter, r *http.Request) { 
-    fmt.Fprintf(w, DatabaseJson) //mock all dead
+    fmt.Fprintf(w, checkAll())
 }
 
 func main() {

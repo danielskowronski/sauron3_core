@@ -34,6 +34,7 @@ function probeLivecheck(){
 			hosts = jQuery.parseJSON(data)
 			$.each( hosts , function( key, host ) {
 				$.each( host.Probes, function( key, probe ) {			
+					var obj = $("[data-host='"+host.Title+"'] [data-probe='"+probe.Title+"']")
 					if (probe.Alive) {
 						$(obj).removeClass("dead")
 						$(obj).addClass("alive")
