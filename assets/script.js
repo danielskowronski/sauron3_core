@@ -32,6 +32,10 @@ function probeLivecheck(){
 		livechecks=jQuery.parseJSON(data);
 		$.each( livechecks, function( key, value ) {
 			hosts = jQuery.parseJSON(data)
+
+			clearTimeout(timeoutHandle)
+			$("#display").css("background", "none");
+		
 			$.each( hosts , function( key, host ) {
 				$.each( host.Probes, function( key, probe ) {			
 					var obj = $("[data-host='"+host.Title+"'] [data-probe='"+probe.Title+"']")
@@ -45,8 +49,6 @@ function probeLivecheck(){
 				});
 			});
 		});
-		clearTimeout(timeoutHandle)
-		$("#display").css("background", "none");
 	});
 }
 
