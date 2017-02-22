@@ -36,6 +36,8 @@ h1 img{
 	text-align: center;
 	padding: 5px;
 	margin: 5px;
+	border: 2px solid yellow;
+	color: 			  yellow;
 }
 .hostCheck.dead{
 	border: 2px solid red;

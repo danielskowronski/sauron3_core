@@ -7,7 +7,7 @@ function constructHostRow(name){
 }
 
 function constructLivecheckField(host,probe){
-	return 	"<div class='hostCheck dead' data-host='"+host+"' data-probe='"+probe+"'>"+probe+"</div>";
+	return 	"<div class='hostCheck' data-host='"+host+"' data-probe='"+probe+"'>"+probe+"</div>";
 }
 
 function parseDefinitions(data){
@@ -35,7 +35,7 @@ function probeLivecheck(){
 
 			clearTimeout(timeoutHandle)
 			$("#display").css("background", "none");
-		
+
 			$.each( hosts , function( key, host ) {
 				$.each( host.Probes, function( key, probe ) {			
 					var obj = $("[data-host='"+host.Title+"'] [data-probe='"+probe.Title+"']")
