@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700&subset=latin-ext');
+
+html, body{
+	font-family: 'Inconsolata', monospace;
+	background: #222;
+	color: #d22;
+	font-size: 32px;
+}
+
+#banner{
+	width: 100%;
+	text-align: center;
+}
+h1 {
+	margin: 0px;
+}
+h1 img{
+	height: 0.7em;
+}
+.hostRow{
+	border: 1px solid black;
+	margin-top: -1px;
+}
+.hostTitle, .hostProbes {
+	display: inline-block;
+	padding: 5px;
+}
+.hostTitle{
+	width: 100px;
+	text-align: right;
+	font-weight: bold;
+}
+.hostCheck {
+	display: inline-block;
+	width: 125px;
+	text-align: center;
+	padding: 5px;
+	margin: 5px;
+}
+.hostCheck.dead{
+	border: 2px solid red;
+	animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0% {
+    background-color: transparent;
+    color: red;
+  }
+  50% {
+    background-color: red;
+    color: black;
+  }
+  100% {
+    background-color: transparent;
+    color: red;
+  }
+}
+.hostCheck.alive{
+	color: green;
+	border: 2px solid green;
+	background: none;
+}
