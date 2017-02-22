@@ -24,17 +24,21 @@ function parseDefinitions(data){
 	});
 }
 
+var timeoutHandle = null
+
 function probeLivecheck(){
-	var timeoutHandle = 
+	clearTimeout(timeoutHandle)
+	timeoutHandle = 
 		setTimeout(function(){ $("#display").css("background", "orange"); }, refreshRate*5);
 
 	$.get( "/probe/", function( data ) {
 		livechecks=jQuery.parseJSON(data);
+		
+		clearTimeout(timeoutHandle)
+			$("#display").css("background", "none");
+
 		$.each( livechecks, function( key, value ) {
 			hosts = jQuery.parseJSON(data)
-
-			clearTimeout(timeoutHandle)
-			$("#display").css("background", "none");
 
 			$.each( hosts , function( key, host ) {
 				$.each( host.Probes, function( key, probe ) {			
