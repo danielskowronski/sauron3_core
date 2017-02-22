@@ -1,3 +1,4 @@
+var refreshRate = 5000; //ms
 function constructHostRow(id, name){
 	return 	"<div class='hostRow' data-hostid='"+id+"'>"+
 			"<div class='hostTitle'>"+name+"</div>"+
@@ -22,8 +23,9 @@ function constructLivechecksContainer(data){
 }
 
 function probeLivecheck(){
+	var timeoutHandle = setTimeout(function(){ $("#display").css("background", "orange"); }, refreshRate*3);
 	$.get( "/probe/", function( data ) {
-		livechecks=jQuery.parseJSON(data)
+		livechecks=jQuery.parseJSON(data);
 		$.each( livechecks, function( key, value ) {
 			obj = $("[data-checkid="+value.check_id+"]")
 			if (value.alive) {
@@ -34,6 +36,8 @@ function probeLivecheck(){
 				$(obj).addClass("dead")
 			}
 		});
+		clearTimeout(timeoutHandle)
+		$("#display").css("background", "none");
 	});
 }
 
@@ -45,7 +49,7 @@ $(function() {
 			constructLivechecksContainer(data)
 
 			probeLivecheck();
-			setInterval(function(){ probeLivecheck(); }, 5000);
+			setInterval(function(){ probeLivecheck(); }, refreshRate);
 		});
 	});
 
