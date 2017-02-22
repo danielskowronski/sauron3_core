@@ -3,6 +3,8 @@ package main
 import (
     "fmt"
     "net/http"
+    "net"
+    "time"
     "io/ioutil"
     "encoding/json"
     "gopkg.in/yaml.v2"
@@ -35,8 +37,10 @@ func loadConfig(){
 func livecheck(ip string, probe Probe) bool{
     //mock ^.^
     if probe.Proto=="tcp" {
-        return true
-    } else if probe.Proto=="udp" {
+        cs := ip+":"+fmt.Sprintf("%v", probe.Port)
+        conn, err := net.DialTimeout(probe.Proto, cs, 250*time.Millisecond)
+        return err==nil
+    } else if probe.Proto=="udp"{
         return false
     } else { // assume ICMP PING as everything other for simple fallback
         state, _ := Ping(ip)
