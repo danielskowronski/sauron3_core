@@ -5,7 +5,6 @@ import (
     "net/http"
     "io/ioutil"
     "encoding/json"
-
     "gopkg.in/yaml.v2"
 )
 
@@ -40,7 +39,8 @@ func livecheck(ip string, probe Probe) bool{
     } else if probe.Proto=="udp" {
         return false
     } else { // assume ICMP PING as everything other for simple fallback
-        return false
+        state, _ := Ping(ip)
+        return state
     }
  
 }

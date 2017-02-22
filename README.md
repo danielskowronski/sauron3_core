@@ -7,5 +7,7 @@ defined in config hosts have ports (tcp/udp/icmp) that are pinged on demand and 
 ## dev - dependencies
  - `go get gopkg.in/yaml.v2`
 
+
 ## dev - compilation
-`go generate && go build -o sauron.o`
+`go generate && go build -o sauron.o && ./sauron.o`
+`sysctl -w net.ipv4.ping_group_range="0 0"` - setup Linux OS for using ping

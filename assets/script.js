@@ -26,7 +26,7 @@ function parseDefinitions(data){
 
 function probeLivecheck(){
 	var timeoutHandle = 
-		setTimeout(function(){ $("#display").css("background", "orange"); }, refreshRate*3);
+		setTimeout(function(){ $("#display").css("background", "orange"); }, refreshRate*5);
 
 	$.get( "/probe/", function( data ) {
 		livechecks=jQuery.parseJSON(data);
