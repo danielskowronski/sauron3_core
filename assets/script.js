@@ -1,4 +1,4 @@
-var refreshRate = 5000; //ms
+var refreshRate = 15000; //ms
 function constructHostRow(name){
 	return 	"<div class='hostRow' data-host='"+name+"' >"+
 			"<div class='hostTitle'>"+name+"</div>"+
