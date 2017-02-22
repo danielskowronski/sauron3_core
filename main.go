@@ -37,11 +37,11 @@ func loadConfig(){
 func livecheck(ip string, probe Probe) bool{
     //mock ^.^
     if probe.Proto=="tcp" {
-        cs := ip+":"+fmt.Sprintf("%v", probe.Port)
-        conn, err := net.DialTimeout(probe.Proto, cs, 250*time.Millisecond)
+    cs := ip+":"+fmt.Sprintf("%v", probe.Port)
+        _, err := net.DialTimeout(probe.Proto, cs, 250*time.Millisecond)
         return err==nil
     } else if probe.Proto=="udp"{
-        return false
+        return false //non trivial
     } else { // assume ICMP PING as everything other for simple fallback
         state, _ := Ping(ip)
         return state

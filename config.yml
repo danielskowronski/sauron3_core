@@ -14,13 +14,13 @@
       proto: icmp
       port: 0
     - title: dns
-      proto: udp
+      proto: tcp
       port: 53
     - title: "tcp/8888"
       proto: tcp
       port: 8888
 - title: full dead
-  ip: 149.156.65.200
+  ip: 149.156.65.100
   probes:
     - title: ping
       proto: icmp
@@ -28,6 +28,3 @@
     - title: tcp/10
       proto: tcp
       port: 10
-    - title: udp/11
-      proto: udp
-      port: 11
