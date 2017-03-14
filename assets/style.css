@@ -7,6 +7,15 @@ html, body{
 	font-size: 32px;
 }
 
+#thermal{
+	width: 500px;height: 150px;
+	position: absolute;
+	right: 10px; top: 10px;
+	color: gold;
+	font-size: 110px;
+	text-align: right;
+}
+
 #banner{
 	width: 100%;
 	text-align: center;

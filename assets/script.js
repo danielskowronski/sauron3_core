@@ -23,6 +23,12 @@ function parseDefinitions(data){
 		});
 	});
 }
+function getTemp(){
+	$.get( "https://klimatyzacja.ksi.ii.uj.edu.pl/temp.json", function( data ) {
+		//console.log(data)
+		$("#thermal").html(data.temp+"&deg;C")
+	});
+}
 
 var timeoutHandle = null
 
@@ -54,9 +60,13 @@ function probeLivecheck(){
 			});
 		});
 	});
+
+	getTemp();
+
 }
 
 $(function() {
+	getTemp();
 	$.get( "/definitions/", function( data ) {
 		parseDefinitions(data)
 
