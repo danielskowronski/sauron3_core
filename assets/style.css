@@ -4,7 +4,7 @@ html, body{
 	font-family: 'Inconsolata', monospace;
 	background: #222;
 	color: #d22;
-	font-size: 32px;
+	font-size: 28px;
 }
 
 #thermal{
@@ -44,7 +44,7 @@ h1 img{
 	width: 125px;
 	text-align: center;
 	padding: 5px;
-	margin: 5px;
+	margin: -1px;
 	border: 2px solid yellow;
 	color: 			  yellow;
 }
