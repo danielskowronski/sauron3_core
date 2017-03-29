@@ -12,6 +12,8 @@ defined in config hosts have ports (tcp/~~udp~~/icmp) that are pinged on demand 
 
 ## dev - dependencies 
  - `go get gopkg.in/yaml.v2`
+ - `go get golang.org/x/net/icmp`
+ - `go get golang.org/x/net/ipv4`
 
 ## dev - compilation
 `go generate && go build -o sauron.o && ./sauron.o` 
