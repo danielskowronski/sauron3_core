@@ -37,7 +37,7 @@ func loadConfig(){
 func livecheck(ip string, probe Probe) bool{
     if probe.Proto=="tcp" {
     cs := ip+":"+fmt.Sprintf("%v", probe.Port)
-        _, err := net.DialTimeout(probe.Proto, cs, 250*time.Millisecond)
+        _, err := net.DialTimeout(probe.Proto, cs, TCPOpenTimeout*time.Millisecond)
         return err==nil
     } else if probe.Proto=="udp"{
         return false //non trivial

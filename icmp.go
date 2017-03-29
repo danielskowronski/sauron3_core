@@ -23,9 +23,6 @@ import (
 	"golang.org/x/net/ipv4"
 )
 
-const ICMPReadTimeout = 2
-const ICMPWriteTimeout = 2
-
 // non-privileged ping on Linux requires special sysctl setting:
 //     sysctl -w net.ipv4.ping_group_range="0 0"
 //
@@ -37,8 +34,8 @@ func Ping(hostname string) (reply bool, err error) {
 		return false, err
 	}
 
-	readDeadline := time.Now().Add(time.Duration(time.Second * ICMPReadTimeout))
-	writeDeadline := time.Now().Add(time.Duration(time.Second * ICMPWriteTimeout))
+	readDeadline := time.Now().Add(time.Duration(time.Millisecond * ICMPReadTimeout))
+	writeDeadline := time.Now().Add(time.Duration(time.Millisecond * ICMPWriteTimeout))
 
 	c, err := icmp.ListenPacket("udp4", "0.0.0.0")
 	if err != nil {
