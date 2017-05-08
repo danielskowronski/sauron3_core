@@ -85,10 +85,13 @@ func main() {
     loadConfig()
 
     fmt.Println("Welcome to sauron runner!")
+    fmt.Println("Copyright 2017 Daniel Skowroński <daniel@dsinf.net>")
+    fmt.Println("")
 
     http.HandleFunc("/", staticHandler)
     http.HandleFunc("/definitions/", getDefinitions)
     http.HandleFunc("/probe/", getLivecheck)
+    fmt.Println("Starting to listen at http://0.0.0.0:8888")
     http.ListenAndServe(":8888", nil)
 }
 
