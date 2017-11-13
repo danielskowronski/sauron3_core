@@ -22,6 +22,7 @@ function parseDefinitions(data){
 
 		});
 	});
+	if (window.location.href.indexOf("2col")>0){a=$("#display").html(); $("body").append('<div id="display2">'+a+'</div>');$("#display2").children(".hostRow").remove(); len=parseInt($("#display").children(".hostRow").length); for (i=parseInt(len/2)+1; i<len; i++) { $($($("#display").children(".hostRow")[parseInt(len/2)+1]).detach()).appendTo("#display2"); } $("#display,#display2").css("display","inline-block").css("width","500px")}
 }
 
 var timeoutHandle = null

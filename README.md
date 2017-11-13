@@ -4,7 +4,9 @@ third approach to Sauron - a real time eye on your network - this time in Go Lan
 ![demo](https://sc-cdn.scaleengine.net/i/22e315caecf77506e50be0619e57303e.png)
 
 ## features
-defined in config hosts have ports (tcp/~~udp~~/icmp) that are pinged on demand and displayed in self refreshing webpage - ideal to be put on plasma tv in Networks Operation Command Center or other similar facilites or accessed from mobile phone 
+* defined in config hosts have ports (tcp/~~udp~~/icmp) that are pinged on demand and displayed in self refreshing webpage - ideal to be put on plasma tv in Networks Operation Command Center or other similar facilites or accessed from mobile phone 
+* if you provide location href `2col` (like `http://sauron/#2col`) sauron will switch to 2 column mode (experimental)
+
 
 ## run
  - config.yml file in same dir as executable (see example)
