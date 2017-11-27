@@ -20,4 +20,7 @@ third approach to Sauron - a real time eye on your network - this time in Go Lan
 ## dev - compilation
 `go generate && go build -o sauron.o && ./sauron.o` 
 
-`sysctl -w net.ipv4.ping_group_range="0 0"` - setup Linux OS for using ping
+## running
+ - `sysctl -w net.ipv4.ping_group_range="0 65535"` - setup Linux OS for using ping
+ - `setcap cap_net_raw+ep /path/to/bin` - give capability to use raw sockets
+ - `CapabilityBoundingSet=CAP_NET_RAW` - systemd 

@@ -24,9 +24,9 @@ import (
 )
 
 // non-privileged ping on Linux requires special sysctl setting:
-//     sysctl -w net.ipv4.ping_group_range="0 0"
+//     sysctl -w net.ipv4.ping_group_range="0 65535"
 //
-// Where group matches running process
+// above code allows everyone to use raw_sockets (still limited by caps)
 // See: http://stackoverflow.com/questions/8290046/icmp-sockets-linux/20105379#20105379
 func Ping(hostname string) (reply bool, err error) {
 	ipAddr, err := net.ResolveIPAddr("ip4", hostname)
