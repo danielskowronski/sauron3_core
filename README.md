@@ -16,6 +16,7 @@ third approach to Sauron - a real time eye on your network - this time in Go Lan
  - `go get gopkg.in/yaml.v2`
  - `go get golang.org/x/net/icmp`
  - `go get golang.org/x/net/ipv4`
+ - `go get github.com/akamensky/argparse`
 
 ## dev - compilation
 `go generate && go build -o sauron.o && ./sauron.o` 

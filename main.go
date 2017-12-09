@@ -8,24 +8,29 @@ import (
     "io/ioutil"
     "encoding/json"
     "gopkg.in/yaml.v2"
+    "github.com/akamensky/argparse"
+    "os"
+    "strconv"
 )
+const retryCount = 5
+
 
 type Probe struct {
-    Title string    `yaml:"title"`
-    Proto string    `yaml:"proto"`
-    Port int32      `yaml:"port"`
-    Alive bool      `yaml:"alive"`
+    Title  string    `yaml:"title"`
+    Proto  string    `yaml:"proto"`
+    Port   int32     `yaml:"port"`
+    Alive  bool      `yaml:"alive"`
 }
 type Host struct {
-    Title string    `yaml:"title"`
-    IP string       `yaml:"ip"`
-    Probes []*Probe `yaml:"probes"`
+    Title  string    `yaml:"title"`
+    IP     string    `yaml:"ip"`
+    Probes []*Probe  `yaml:"probes"`
 }
 var Database []*Host
 var DatabaseJson string
 
-func loadConfig(){
-    data, err := ioutil.ReadFile("config.yml") 
+func loadConfig(path string){
+    data, err := ioutil.ReadFile(path) 
     if err != nil { panic(fmt.Sprintf("%v",err)) }
     err = yaml.Unmarshal(data, &Database)
     if err != nil { panic(fmt.Sprintf("%v",err)) }
@@ -40,7 +45,7 @@ func livecheck(ip string, probe Probe) bool{
         _, err := net.DialTimeout(probe.Proto, cs, TCPOpenTimeout*time.Millisecond)
         return err==nil
     } else if probe.Proto=="udp"{
-        return false //non trivial
+        return false //non trivial, TODO: implement me
     } else { // assume ICMP PING as everything other for simple fallback
         state, _ := Ping(ip)
         return state
@@ -53,7 +58,10 @@ func checkAll() string{
 
     for _,host := range LiveStatus {
         for _,probe := range host.Probes {
-            probe.Alive=livecheck(host.IP, *probe)
+            for i:=0; i<retryCount; i++ {
+                probe.Alive=livecheck(host.IP, *probe)
+                if probe.Alive { break; }
+            }
         }
     }
 
@@ -82,7 +90,34 @@ func getLivecheck(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-    loadConfig()
+    parser := argparse.NewParser("sauron3", "a real time eye on your network")
+
+    cfg := parser.String("c", "config", 
+        &argparse.Options{Required: false, Help: "Path to config file (default is ./config.yml)"})
+    port := parser.String("p", "port",  
+        &argparse.Options{Required: false, Help: "Port for webgui (default is 8888)"})
+    host := parser.String("b", "bind",  
+        &argparse.Options{Required: false, Help: "IP to bind (default is 0.0.0.0)"})
+    err := parser.Parse(os.Args)
+    if err != nil {
+        fmt.Print(parser.Usage(err))
+        os.Exit(0)
+    }
+
+    if *cfg =="" { *cfg="config.yml" }
+    if *port=="" { *port="8888" } else {
+        portNumeric, err := strconv.Atoi(*port)
+        if err!=nil || portNumeric<1 || portNumeric>65535 {
+            fmt.Println("[!!] Invalid port number. Exiting")
+            os.Exit(1)
+        }
+    }
+
+    bindString:=*host+":"+*port
+    bindStringFull:=bindString
+    if *host=="" { 
+        bindStringFull="0.0.0.0:"+*port
+    }
 
     fmt.Println("Welcome to sauron runner!")
     fmt.Println("Copyright 2017 Daniel Skowroński <daniel@dsinf.net>")
@@ -91,8 +126,11 @@ func main() {
     http.HandleFunc("/", staticHandler)
     http.HandleFunc("/definitions/", getDefinitions)
     http.HandleFunc("/probe/", getLivecheck)
-    fmt.Println("Starting to listen at http://0.0.0.0:8888")
-    http.ListenAndServe(":8888", nil)
+    
+    fmt.Println("Loading config file "+*cfg)
+    loadConfig(*cfg)
+    fmt.Println("Starting to listen at http://"+bindStringFull)
+    http.ListenAndServe(bindString, nil)
 }
 
 //go:generate go run scripts/packTextAssets.go
