@@ -1,4 +1,4 @@
-package main
+package sauron3
 
 
 const ICMPReadTimeout  = 150
