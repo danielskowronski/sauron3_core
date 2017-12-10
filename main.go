@@ -25,7 +25,7 @@ type Host struct {
 var Database []*Host
 var DatabaseJson string
 
-func loadConfig(path string){
+func LoadConfig(path string){
     data, err := ioutil.ReadFile(path) 
     if err != nil { panic(fmt.Sprintf("%v",err)) }
     err = yaml.Unmarshal(data, &Database)
@@ -35,7 +35,7 @@ func loadConfig(path string){
     DatabaseJson = string(jsonObj)
 }
 
-func livecheck(ip string, probe Probe) bool{
+func Livecheck(ip string, probe Probe) bool{
     if probe.Proto=="tcp" {
     cs := ip+":"+fmt.Sprintf("%v", probe.Port)
         _, err := net.DialTimeout(probe.Proto, cs, TCPOpenTimeout*time.Millisecond)
@@ -49,13 +49,13 @@ func livecheck(ip string, probe Probe) bool{
  
 }
 
-func checkAll() string{
+func CheckAll() string{
     LiveStatus := Database
 
     for _,host := range LiveStatus {
         for _,probe := range host.Probes {
             for i:=0; i<retryCount; i++ {
-                probe.Alive=livecheck(host.IP, *probe)
+                probe.Alive=Livecheck(host.IP, *probe)
                 if probe.Alive { break; }
             }
         }
